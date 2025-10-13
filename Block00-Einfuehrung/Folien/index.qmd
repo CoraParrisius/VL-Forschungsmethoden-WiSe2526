@@ -7,7 +7,7 @@ date: today
 date-format: "[Wintersemester] YYYY"
 
 logo: img/ph-logo.svg
-footer: Folien by Samuel Merk {{< iconify streamline:creative-commons-solid >}} {{< iconify fa6-brands:creative-commons-by >}} unter ogy.de/mvl-sose-25
+footer: Folien by Samuel Merk {{< iconify streamline:creative-commons-solid >}} {{< iconify fa6-brands:creative-commons-by >}} unter ogy.de/mvl-wise-2526
 
 format: 
   revealjs:
