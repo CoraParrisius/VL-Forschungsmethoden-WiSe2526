@@ -1,0 +1,1624 @@
+---
+title: "VL Forschungsmethoden" 
+subtitle: "Effektstärken für Gruppenunterschiede & Variablenzusammenhänge"
+author: "Samuel Merk & Cora Parrisius"
+
+date: today
+date-format: "[Sommersemster] YYYY"
+
+logo: img/PHlogo.svg
+
+format: 
+  revealjs:
+    embed-resources: false
+    slide-number: c
+    html-math-method: mathjax
+
+brand: _template/_brand.yml    
+
+lang: de
+
+bibliography: references.bib
+csl: apa.csl
+
+---
+
+## Inhalte dieses Vorlesungsblocks { .center}
+
+```{r hidden chunk which creates template stuff}
+#| echo: false
+
+library(fontawesome)
+library(tidyverse)
+library(exams2forms)
+library(quartoMorphSvg)
+library(faux)
+library(bayestestR)
+library(hrbrthemes)
+```
+
+| [{{< iconify fa6-solid:lightbulb >}}]{.imp}  | Informationsgehalt von Effektstärken |
+|---------------------------------------:|:-------------------------------|
+| [{{< iconify fa6-solid:ruler >}}]{.imp} | Effektstärken für Gruppenunterschiede (Cohen's $U_1$ und Cohen's $d$) |
+| [{{< iconify fa6-solid:medal >}}]{.imp} | Effektstärken für zwei nicht-normalverteilte (z.B. ordinale) Variablen (Cliff's $d$) |
+| [{{< iconify teenyicons:table-solid >}}]{.imp}|  Assoziation zweier (mindestens) ordinalskalierter Variablen (Kendal's $\tau_b$) |
+| [{{< iconify fa6-solid:ruler >}}]{.imp} | Assoziation (zweier) bivariat-normalverteilter Variablen (Pearson's $r$) |
+
+
+: Vortragsüberblick {#tbl-agenda tbl-colwidths="\[5,90\]"}
+
+<style>
+#tbl-agenda-caption-0ceaefa1-69ba-4598-a22c-09a6ac19f8ca {
+  color: #d9534f00; /* transparant */
+  font-weight: bold;
+}
+</style>
+
+
+## <!--Informationsgehalt von Effektstärken--> {.center .smaller}
+[{{< iconify fa6-solid:lightbulb >}} Informationsgehalt von Effektstärken]{style="color:#267326; font-size:1.8em;"}
+
+
+## Informationsgehalt von Effektstärken {.center .smaller}
+::: {.r-stack}
+![](img/screentime.png){.fragment fragment-index=1 width="35%" fig-align="center"}
+
+![](img/FAZ_Migrationshintergrund.png){.fragment fragment-index=2 width="68%" fig-align="center"}
+
+![](img/ImaginaryPill.png){.fragment fragment-index=3 width="33%" fig-align="center"}
+
+![](img/welt_problemlösen.png){.fragment fragment-index=4 width="60%" fig-align="center"}
+:::
+
+. . .
+
+<center>Artikel aus ARD [-@zotero-item-9353], FAZ [-@2018a], psychologie-lernen.de [-@psychologie-lernen.de2023] und Welt [-@2015a]</center>
+
+## Informationsgehalt von Effektstärken {.center .smaller}
+![](img/visOverlap.svg){width=70% fig-align="center"}  
+
+<center>
+Zum Informationsgehalt von Mittelwertsdifferenzen.
+</center>
+
+
+
+## Überlappung vs. Mittelwertsdifferenz
+<center>
+<iframe width="1280" height="500" src="https://sammerk.github.io/VL-Forschungsmethoden-SoSe25/Block03-Effektstaerken/Folien/Integrierte%20Apps/MW-Ueberlappungsunabhaengigkeit/live-app" title="Aufgabe"></iframe>
+</center>
+
+
+## Aufgabe
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/mittelwertsunterschiede-deskriptiv-lesen.html" title="Aufgabe"></iframe>
+</center>
+
+## <!--Effektstärken für zwei normalverteilte (z.B. ordinale) Variablen--> {.center}
+[{{< iconify fa6-solid:ruler >}} Effektstärken für zwei normalverteilte Variablen]{style="font-size: 1.5em;"}
+
+## Cohen's U₁ (% of Non-Overlap){.center .smaller}
+
+```{r}
+#| fig-width: 13
+#| fig-height: 3.5
+#| fig-format: svg
+#| cache: true
+
+library(tidyverse)
+library(patchwork)
+library(hrbrthemes)
+plot1 <-
+  ggplot(data.frame(x = c(-3, 3.8)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .8),
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    args = list(mean = .8),
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  xlim(c(-3, 3.8)) +
+  ggtitle("Großer Effekt", bquote("Cohen's" ~U[1]~ "= % of Non-Overlap = .47")) +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+plot2 <-
+  ggplot(data.frame(x = c(-3, 3.5)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .5),
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    args = list(mean = .5),
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  xlim(c(-3, 3.5)) +
+  ggtitle("Moderater Effekt", bquote("Cohen's" ~U[1]~ "= % of Non-Overlap = .33")) +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+
+plot3 <-
+  ggplot(data.frame(x = c(-3, 3.2)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .2),
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  stat_function(
+    geom = "area", 
+    fun = dnorm,
+    args = list(mean = .2),
+    fill = "#26732650",
+    color="#ffffff00"
+  ) +
+  xlim(c(-3, 3.2)) +
+  ggtitle("Kleiner Effekt", bquote("Cohen's" ~U[1]~ "= % of Non-Overlap = .15")) +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+
+plot1 + plot2 + plot3 +
+  plot_layout() &
+   theme(plot.background = element_rect(fill = "#1e1e1e",
+                                        color = "#1e1e1e")) # 1e1e1e from hrbr
+```
+
+::: {.incremental}
+* $U_1 =$ Nicht-Überlappung der Häufigkeitsverteilungen
+* Voraussetzung: Zwei normalverteile (daher auch intervallskalierte) Variablen
+* $U_1$ nimmt Werte zwischen 0 (Nulleffekt) und 1 (maximaler Effekt) an
+* Cohen's [-@cohen1988] Benchmarks für kleine, mittlere und große Effekte liegen bei $U_1=.15$, $U_1=.33$ und $U_1=.47$
+:::
+
+
+
+
+## [Cohen's $d$ (Standardized Mean Difference)]{style="font-size:.8em;"}{.center .smaller}
+
+```{r}
+#| cache: true
+#| fig-width: 13
+#| fig-height: 3.5
+#| fig-format: svg
+
+library(tidyverse)
+library(patchwork)
+library(hrbrthemes)
+plot1 <-
+  ggplot(data.frame(x = c(-3, 3.8)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .8),
+    color = "#267326"
+  ) +
+  # mean gr 1
+  geom_segment(aes(
+    x = 0,
+    y = 0,
+    xend = 0,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean gr 2
+  geom_segment(aes(
+    x = 0.8,
+    y = 0,
+    xend = 0.8,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean diff
+  geom_segment(aes(
+    y = .05,
+    x = 0,
+    yend = .05,
+    xend = .8),
+    color = "#267326",
+    linetype = "dotted"
+  ) +
+  # sd
+  geom_segment(aes(
+    y = dnorm(1),
+    x = .8,
+    yend = dnorm(1),
+    xend = 1.8),
+    color = "#267326",
+    linetype = "dashed"
+  ) +
+  xlim(c(-3, 3.7)) +
+  ggtitle("Großer Effekt", "Cohen's d = Standardized Mean Difference = .8") +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+plot2 <-
+  ggplot(data.frame(x = c(-3, 3.5)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .5),
+    color = "#267326"
+  ) +
+   # mean gr 1
+  geom_segment(aes(
+    x = 0,
+    y = 0,
+    xend = 0,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean gr 2
+  geom_segment(aes(
+    x = 0.5,
+    y = 0,
+    xend = 0.5,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean diff
+  geom_segment(aes(
+    y = .05,
+    x = 0,
+    yend = .05,
+    xend = .5),
+    color = "#267326",
+    linetype = "dotted"
+  ) +
+  # sd
+  geom_segment(aes(
+    y = dnorm(1),
+    x = .5,
+    yend = dnorm(1),
+    xend = 1.5),
+    color = "#267326",
+    linetype = "dashed"
+  ) +
+  xlim(c(-3, 3.5)) +
+  ggtitle("Moderater Effekt", "Cohen's d = Standardized Mean Difference = .5") +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+
+plot3 <-
+  ggplot(data.frame(x = c(-3, 3.2)), aes(x)) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    color = "#267326"
+  ) +
+  stat_function(
+    geom = "line", 
+    fun = dnorm,
+    args = list(mean = .2),
+    color = "#267326"
+  ) +
+   # mean gr 1
+  geom_segment(aes(
+    x = 0,
+    y = 0,
+    xend = 0,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean gr 2
+  geom_segment(aes(
+    x = 0.2,
+    y = 0,
+    xend = 0.2,
+    yend = dnorm(0)),
+    color = "#26732630"
+  ) +
+  # mean diff
+  geom_segment(aes(
+    y = .05,
+    x = 0,
+    yend = .05,
+    xend = .2),
+    color = "#267326",
+    linetype = "dotted"
+  ) +
+  # sd
+  geom_segment(aes(
+    y = dnorm(1),
+    x = .2,
+    yend = dnorm(1),
+    xend = 1.2),
+    color = "#267326",
+    linetype = "dashed"
+  ) +
+  xlim(c(-3, 3.2)) +
+  ggtitle("Kleiner Effekt", "Cohen's d = Standardized Mean Difference = .2") +
+  theme_modern_rc() +
+  theme(axis.title.y = element_blank(),
+        axis.title.x = element_blank(),
+        axis.text.y = element_blank(),
+        axis.text.x = element_blank())
+
+
+plot1 + plot2 + plot3 +
+  plot_layout() &
+   theme(plot.background = element_rect(fill = "#1e1e1e",
+                                        color = "#1e1e1e")) # 1e1e1e from hrbr
+```
+
+::: {.incremental}
+* $d(XY) = \frac{\bar{x}-\bar{y}}{\sqrt{\frac{s_x^2 + s_y^2}{2}}}$ [(Interaktive Visualisierung {{< iconify fa6-solid:square-up-right >}})](https://www.geogebra.org/m/tGcX62gq){preview-link="true"}
+* Cohen's $d$ kann Werte zwischen $-\infty$ und $+\infty$ annehmen. Je weiter $d$ von 0 entfernt ist, desto stärker ist der Effekt; $d = 0$ entspricht dem Nulleffekt 
+* Cohen's Benchmarks für kleine, mittlere und große Effekte liegen bei $d=.2$, $d=.5$ und $d=.8$
+:::
+
+## Aufgabe
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/guessing-u1-sc.html" title="Aufgabe"></iframe>
+</center>
+
+## <!--Effektstärken für zwei nicht-normalverteilte (z.B. ordinale) Variablen--> {.center}
+[{{< iconify fa6-solid:medal >}} Effektstärken für zwei nicht-normalverteilte (z.B. ordinale) Variablen]{style="color:#267326; font-size:.87em;"}
+
+
+
+## Cliff's $d$ (Rangbiseriale Korrelation) {.smaller .center}
+:::: {.columns}
+
+::: {.column #vcenter width='50%'}
+
+Die Grundidee von Cliff's d ist, jeden Punkt einer Gruppe $x_i$ mit jedem Punkt der anderen Gruppe $y_i$ zu vergleichen und zu entscheiden, ob $\color{#d77d00}{x_i < y_i}$, $x_i = y_i$ oder $\color{#267326}{x_i > y_i}$ gilt.
+
+:::
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 3
+#| fig-height: 4
+#| out-width: 80%
+#| fig-align: center
+library(hrbrthemes)
+
+tibble(Placebo = c(1, 2, 2, 3) + 1,
+         Control = c(3, 4, 4, 5)) |>
+  gather(Gruppe, Nervosität) |>
+  ggplot(aes(x = Gruppe, Nervosität)) +
+  geom_dotplot(
+    color = "#ffffff",
+    fill = "#ffffff",
+    binaxis = "y",
+    stackdir = "center"
+  ) +
+  geom_segment(aes(
+    x = 1,
+    y = 3,
+    xend = 2,
+    yend = 4
+  ), color = "#d77d0050") +
+  geom_segment(aes(
+    x = 1,
+    y = 3,
+    xend = 2,
+    yend = 2
+  ), color = "#26732650") +
+  geom_dotplot(
+    color = "#ffffff",
+    fill = "#ffffff",
+    binaxis = "y",
+    stackdir = "center"
+  ) +
+  ggtitle("Illustration Cliff's d") +
+  theme_modern_rc()
+```
+
+:::
+
+::::
+
+## Cliff's $d$ (Rangbiseriale Korrelation) {.smaller .center }
+
+:::: {.columns}
+
+::: {.column width='70%'}
+::: {.fragment}
+$$\text{Cliff's } d = \frac{\#\text{Abwärtsvergl.} - \#\text{Aufwärtsvergl.}}{\#\text{Alle Vergl.}}$$
+
+$$= \frac{\color{#267326}{\#(x_i > y_i)} - \color{#d77d00}{\#(x_i < y_i)}}{\#X \cdot \#Y}$$
+
+$$= \frac{\color{#267326}{11} - \color{#d77d00}{1}}{16}$$
+$$= .625$$ 
+
+:::
+:::
+
+::: {.column width='30%'}
+
+```{r}
+#| fig-width: 3
+#| fig-height: 4
+#| out-width: 99%
+#| fig-align: center
+library(hrbrthemes)
+
+tibble(Placebo = c(1, 2, 2, 3) + 1,
+         Control = c(3, 4, 4, 5)) |>
+  gather(Gruppe, Nervosität) |>
+  ggplot(aes(x = Gruppe, Nervosität)) +
+  geom_dotplot(
+    color = "#ffffff",
+    fill = "#ffffff",
+    binaxis = "y",
+    stackdir = "center"
+  ) +
+  geom_segment(aes(
+    x = 1,
+    y = 3,
+    xend = 2,
+    yend = 4
+  ), color = "#d77d0050") +
+  geom_segment(aes(
+    x = 1,
+    y = 3,
+    xend = 2,
+    yend = 2
+  ), color = "#26732650") +
+  geom_segment(aes(
+    x = 1.05,
+    y = 4,
+    xend = 2,
+    yend = 2
+  ), color = "#26732650") +
+    geom_segment(aes(
+    x = .95,
+    y = 4,
+    xend = 2,
+    yend = 2
+  ), color = "#26732650") +
+  geom_segment(aes(
+    x = 1.05,
+    y = 4,
+    xend = 1.95,
+    yend = 3
+  ), color = "#26732650") +
+    geom_segment(aes(
+    x = .95,
+    y = 4,
+    xend = 1.95,
+    yend = 3
+  ), color = "#26732650") +
+  geom_segment(aes(
+    x = 1.05,
+    y = 4,
+    xend = 2.05,
+    yend = 3
+  ), color = "#26732650") +
+    geom_segment(aes(
+    x = .95,
+    y = 4,
+    xend = 2.05,
+    yend = 3
+  ), color = "#26732650") +
+  geom_segment(aes(
+    x = 1,
+    y = 5,
+    xend = 2,
+    yend = 4
+  ), color = "#26732650") +
+  geom_segment(aes(
+    x = 1,
+    y = 5,
+    xend = 1.95,
+    yend = 3
+  ), color = "#26732650") +
+    geom_segment(aes(
+    x = 1,
+    y = 5,
+    xend = 2.05,
+    yend = 3
+  ), color = "#26732650") +
+    geom_segment(aes(
+    x = 1,
+    y = 5,
+    xend = 2,
+    yend = 2
+  ), color = "#26732650") +
+  geom_dotplot(
+    color = "#ffffff",
+    fill = "#ffffff",
+    binaxis = "y",
+    stackdir = "center"
+  ) +
+  ggtitle("Illustration Cliff's d") +
+  theme_modern_rc()
+
+
+```
+
+:::
+
+::::
+
+## Benchmarks Cliff's d {.smaller}
+
+
+## Aufgabe
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/cliff-d-aus-graph-minimalbeispiel.html" title="Aufgabe"></iframe>
+</center>
+
+
+
+## Aufgabe
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/guessing-cliff-d-abschluesse_sc.html" title="Aufgabe"></iframe>
+</center>
+
+## Job-Alert: Jetzt studentische Hilskraft werden! {.smaller}
+
+Wir suchen engagierte Hiwis für verschiedene Aufgabenbereiche:
+
+::: columns
+
+:::{.column width="70%"}
+
+* Forschungsprojekte (Literaturrecherche, Datenerhebung, -aufbereitung, -analyse, -dokumentation)
+* Administrative Tätigkeiten im Fachbereich
+
+Mehr Infos: [https://t1p.de/ifbf-hiwi-2025](https://t1p.de/ifbf-hiwi-2025)
+
+Jetzt bewerben!
+
+
+:::
+
+:::{.column width="30%"}
+
+![](img/t1p-de-ifbf-hiwi-2025.png){fig-align="center"}
+
+:::
+:::
+
+## <!--Kendall's tau--> {.center .smaller}
+[{{< iconify teenyicons:table-solid >}} Assoziation zweier (mind.) ordinalskalierter Variablen]{style="color:#267326; font-size:1.3em;"}
+
+
+
+## Zusammenh. von Bildungsabschl.
+![](img/derstandard.png){width="70%" fig-align="center"}
+
+```{r}
+#| label: Beispiele ordinale Assoziationen
+#| fig-width: 12
+#| fig-height: 3
+#| out-width: 100%
+#| cache: true
+min_data <- 
+  tibble(Effektgröße = c(rep("Große neg. Assoziation", 4),
+                       rep("Kleine neg. Assoziation", 4),
+                       rep("Keine Assoziation", 4),
+                       rep("Kleine pos. Assoziation", 4),
+                       rep("Große pos. Assoziation", 4)),
+       `Höchster Abschluss der Eltern` = c(1:4,
+                                           1:4,
+                                           2, 2, 3, 3,
+                                           1:4,
+                                           1:4),
+       `Höchster Abschluss\ndes Befragten` = c(4:1,
+                                              4, 2, 3, 1,
+                                              3, 2, 2, 3,
+                                              1, 3, 2, 4,
+                                              1:4)) |> 
+  mutate(Effektgröße = factor(Effektgröße, 
+                              levels = c("Große neg. Assoziation",
+                                         "Kleine neg. Assoziation",
+                                         "Keine Assoziation",
+                                         "Kleine pos. Assoziation", 
+                                         "Große pos. Assoziation")),
+         `Höchster Abschluss der Eltern` = 
+           case_when(`Höchster Abschluss der Eltern` == 1 ~ "KA",
+                     `Höchster Abschluss der Eltern` == 2 ~ "MA",
+                     `Höchster Abschluss der Eltern` == 3 ~ "HZ",
+                     `Höchster Abschluss der Eltern` == 4 ~ "HA"),
+         `Höchster Abschluss\ndes Befragten` = 
+           case_when(`Höchster Abschluss\ndes Befragten` == 1 ~ "KA",
+                     `Höchster Abschluss\ndes Befragten` == 2 ~ "MA",
+                     `Höchster Abschluss\ndes Befragten` == 3 ~ "HZ",
+                     `Höchster Abschluss\ndes Befragten` == 4 ~ "HA"),
+         `Höchster Abschluss\ndes Befragten` = 
+           factor(`Höchster Abschluss\ndes Befragten`,
+                  level = c("KA", "MA", "HZ", "HA")),
+         `Höchster Abschluss der Eltern` = 
+           factor(`Höchster Abschluss der Eltern`,
+                  level = c("KA", "MA", "HZ", "HA")))
+
+ggplot(min_data, aes(`Höchster Abschluss der Eltern`, 
+             `Höchster Abschluss\ndes Befragten`)) +
+  geom_point(color = "#8cd000") +
+  facet_wrap( ~ Effektgröße, ncol = 5) +
+  theme_modern_rc() +
+  theme(strip.text = element_text(color = "white")) 
+```
+
+
+
+```{r}
+#| label: vis_tau function
+#| eval: false
+#| cache: true
+vis_tau <- function(plot_raw, 
+                    rnd = 1, 
+                    alpha = .5, 
+                    color = "#8cd000", 
+                    linewidth = 3, 
+                    size_point = 3) {
+data_rawplot <- 
+  layer_data(plot_raw)
+
+data_to_add <- 
+  expand_grid(A = paste(data_rawplot$x,data_rawplot$y, sep = "X"),
+              B = paste(data_rawplot$x,data_rawplot$y, sep = "X")) |> 
+  separate_wider_delim(A, "X", names = c("xlinks", "ylinks")) |> 
+  separate_wider_delim(B, "X", names = c("xrechts", "yrechts")) |> 
+  mutate(xlinks = as.numeric(xlinks),
+         ylinks = as.numeric(ylinks),
+         xrechts = as.numeric(xrechts),
+         yrechts = as.numeric(yrechts),
+         Vergleich = 
+           case_when(
+             round(ylinks, rnd) < round(yrechts, rnd) &
+               round(xlinks, rnd) < round(xrechts, rnd) ~ "diskordant", 
+             round(ylinks, rnd) > round(yrechts, rnd) &
+               round(xlinks, rnd) < round(xrechts, rnd) ~ "konkordant",
+             round(xlinks, rnd) == round(xrechts, rnd) ~ "tie AV",
+             round(ylinks, rnd) == round(yrechts, rnd) ~ "tie UV")) |> 
+  filter(!(ylinks == yrechts & xlinks == xrechts)) |> 
+  filter(!is.na(Vergleich))
+
+ggplot() +
+  geom_segment(
+    data = data_to_add,
+    aes(
+      x = xlinks,
+      y = ylinks,
+      xend = xrechts,
+      yend = yrechts,
+      color = Vergleich
+    ),
+    linewidth = linewidth,
+    alpha = alpha
+  ) +
+  geom_point(data = data_rawplot, aes(x,y),
+             color = color,
+             size = size_point) +
+  theme_modern_rc() +
+  scale_color_manual(values = c("#8cd000", 
+                                "#d77d00",
+                                "darkgrey", 
+                                "#ffffff",
+                                "#ffffff00"),
+                     guide = guide_legend(override.aes = list(size = 4,
+                                                              alpha = 1))
+                     )
+
+}
+
+min_plot <- 
+  ggplot(min_data |> 
+           filter(Effektgröße %in% 
+                    c("Kleine pos. Assoziation",
+                      "Große pos. Assoziation",
+                      "Kleine neg. Assoziation")), 
+         aes(`Höchster Abschluss der Eltern`, 
+             `Höchster Abschluss\ndes Befragten`)) +
+  geom_jitter(color = "#8cd000", width = .2, height = .2) +
+  theme_modern_rc() +
+  theme(strip.text = element_text(color = "white"))
+
+vis_tau(
+  min_plot,
+  rnd = 0,
+  color = "#8cd000",
+  alpha = .5,
+  linewidth = .2,
+  size_point = 4
+)
+
+```
+
+## Aufgabe
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/Korr_Bildungsabschluesse_erkennen.html" title="Aufgabe"></iframe>
+</center>
+
+## Definition Kendall's $\tau_{\mathrm{a}}$ [-@kendall1938] {.center .smaller}
+::: {style="width: 40%;"}
+```{r}
+#| label: quartomorph taua
+#| cache: true
+morph_svg(
+  "img/ntau-6.svg", 
+  "img/ntau-5.svg",
+  "img/ntau-4.svg",
+  "img/ntau-3.svg",
+  "img/ntau-2.svg",
+  "img/ntau-1.svg",
+  animation_duration = 1
+  )
+```
+:::
+
+. . .
+
+<br>
+<center>
+$\text{Kendall's }\tau_A= \frac{\color{#8cd000}{\#(\text{konkordante Paare})}\;-\; \color{#d77d00}{\#(\text{diskordante Paare})}}{\#\text{(alle Paare)}}$
+</center>
+
+. . .
+
+<br>
+<center>
+$= \frac{\color{#8cd000}{5}\;-\; \color{#d77d00}{1}}{6} = \frac{4}{6} = .\bar{6}$
+</center>
+
+##  Problem Kendall's $\tau_{\mathrm{a}}$ {.smaller}
+:::: {.columns}
+
+::: {.column width='43%'}
+![](img/ERKLtaubLI.svg){}
+:::
+
+::: {.column width='43%'}
+
+```{r}
+#| label: quartomorph taub
+#| cache: false
+morph_svg(
+  "img/ERKLtaubRE-2.svg", 
+  "img/ERKLtaubRE-1.svg", 
+  animation_duration = 1
+  )
+```
+
+:::
+
+::::
+
+. . .
+
+> [Rangbindungen]{style="color: #0fa5d7;"} (engl. »[ties]{style="color: #0fa5d7;"}«) nennt man Paarvergleiche, bei denen (genau) eine der beiden Variablen gleich ausgeprägt ist. Kendall's $\tau_A$, verhält sich problematisch wenn  Rangbindungen vorliegen.
+
+
+## Definition Kendall's $\tau_{\mathrm{b}}$ {.smaller .center}
+Gelten folgende Bezeichnungen
+
+* $n_{\mathrm{K}}$: Anzahl aller konkordanten Paare
+* $n_{\mathrm{D}}$: Anzahl aller diskordanten Paare
+* $n_{\mathrm{B}(X)}$: Anzahl aller Rangbindungen einzig in der Variable X
+* $n_{\mathrm{B}(Y)}$: Anzahl aller Rangbindungen einzig in der Variable Y
+
+ist Kendall's $\tau_{\mathrm{b}}$ wie folgt definiert
+$$\tau_{\mathrm{b}} \left(X,Y \right)=\frac{n_{\mathrm{K}}-n_{\mathrm{D}}}{\sqrt{\left(n_{\mathrm{K}}+n_{\mathrm{D}}+n_{\mathrm{B}(X)}\right) \cdot\left(n_{\mathrm{K}}+n_{\mathrm{D}}+n_{\mathrm{B}(Y)}\right)}}$$
+
+
+## Visualisierung Kendall's $\tau_{\mathrm{b}}$ {.smaller}
+```{r}
+#| label: vis_tau function 1
+#| cache: true
+#| fig-width: 6
+#| fig-height: 5
+#| out-width: 48%
+#| fig-align: center
+vis_tau <- function(plot_raw, 
+                    rnd = 1, 
+                    alpha = .5, 
+                    color = "#8cd000", 
+                    linewidth = 3, 
+                    size_point = 3) {
+data_rawplot <- 
+  layer_data(plot_raw)
+
+data_to_add <- 
+  expand_grid(A = paste(data_rawplot$x,data_rawplot$y, sep = "X"),
+              B = paste(data_rawplot$x,data_rawplot$y, sep = "X")) |> 
+  separate_wider_delim(A, "X", names = c("xlinks", "ylinks")) |> 
+  separate_wider_delim(B, "X", names = c("xrechts", "yrechts")) |> 
+  mutate(xlinks = as.numeric(xlinks),
+         ylinks = as.numeric(ylinks),
+         xrechts = as.numeric(xrechts),
+         yrechts = as.numeric(yrechts),
+         Vergleich = 
+           case_when(
+             round(ylinks, rnd) < round(yrechts, rnd) &
+               round(xlinks, rnd) < round(xrechts, rnd) ~ "konkordant", 
+             round(ylinks, rnd) > round(yrechts, rnd) &
+               round(xlinks, rnd) < round(xrechts, rnd) ~ "diskordant",
+             round(xlinks, rnd) == round(xrechts, rnd) ~ "tie AV",
+             round(ylinks, rnd) == round(yrechts, rnd) ~ "tie UV")) |> 
+  filter(!(ylinks == yrechts & xlinks == xrechts)) |> 
+  filter(!is.na(Vergleich))
+
+ggplot() +
+  geom_segment(
+    data = data_to_add,
+    aes(
+      x = xlinks,
+      y = ylinks,
+      xend = xrechts,
+      yend = yrechts,
+      color = Vergleich
+    ),
+    linewidth = linewidth,
+    alpha = alpha
+  ) +
+  geom_point(data = data_rawplot, aes(x,y),
+             color = color,
+             size = size_point) +
+  theme_modern_rc() +
+  scale_color_manual(values = c("#d77d00", 
+                                "#8cd000",
+                                "#0FA5D7", 
+                                "#ffffff"),
+                     guide = guide_legend(override.aes = list(size = 4,
+                                                              alpha = 1))
+                     )
+
+}
+
+min_plot <- 
+  ggplot(tibble( x = c(1,2,2,3,3,4),
+                 y = c(1,2,3,2,3,4)),
+         aes(x,y)) +
+  geom_jitter(color = "#8cd000", width = .2, height = .2) +
+  theme_modern_rc() +
+  theme(strip.text = element_text(color = "white"))
+
+vis_tau(
+  min_plot,
+  rnd = 0,
+  color = "#8cd000",
+  alpha = .5,
+  linewidth = .2,
+  size_point = 4
+) +
+  xlab("") +
+  ylab("") +
+  ggtitle(paste(
+    "Kendall's τ = " ,
+    cor(c(1,2,2,3,3,4),
+        c(1,2,3,2,3,4),
+        method = "kendall") |> 
+        round(2)
+  ))
+
+```
+
+$\tau_{\mathrm{b}} \left(X,Y \right)=\frac{\color{#8cd000}{n_{\mathrm{K}}}-\color{#d77d00}{n_{\mathrm{D}}}}{\sqrt{\left(\color{#8cd000}{n_{\mathrm{K}}}+\color{#d77d00}{n_{\mathrm{D}}}+\color{#11111180}{n_{\mathrm{B}(X)}}\right) \cdot\left(\color{#8cd000}{n_{\mathrm{K}}}+\color{#d77d00}{n_{\mathrm{D}}}+\color{#0FA5D7}{n_{\mathrm{B}(Y)}}\right)}} = \frac{\color{#8cd000}{10} - \color{#d77d00}{1}}{\sqrt{\left(\color{#8cd000}{10} + \color{#d77d00}{1} +\color{#11111180}{2} \right) \cdot \left( \color{#8cd000}{10} + \color{#d77d00}{1} +\color{#0FA5D7}{2} \right)}} \approx .69$
+
+
+## Eigenschaften Kendall's $\tau_{\mathrm{b}}$  {.center}
+::: {.incremental}
+* Kendall's $\tau_{\mathrm{b}}$ beschreibt die Stärke der (negativen oder positiven) Assoziation zweier mindestens ordinalen Variablen
+* Kendall's $\tau_{\mathrm{b}}$ nimmt Werte zwischen -1 und 1 an $(-1 \leq \tau_{\mathrm{b}} \leq 1)$. -1 impliziert die maximale negative Assoziation, 0 keine Assoziation und 1 die maximale positive Assoziation
+* Nach Cohen [-@cohen1988], gilt $\tau =.1$ (bzw. $\tau = -.1$) als kleiner Effekt, $\tau =.3$ (bzw. $\tau = -.3$) als moderater und $\tau =.5$ (bzw. $\tau = -.5$) als starker Effekt
+:::
+
+## Aufgaben {.center}
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/tau_in_Extremdatenbeispiel_bestimmen.html" title="Aufgabe"></iframe>
+</center>
+
+## Aufgaben {.center}
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/Order_tau_alluvial.html" title="Aufgabe"></iframe>
+</center>
+
+## <!--Pearsons's r--> {.center .smaller}
+[{{< iconify fa6-solid:ruler >}} Assoziation zweier bivariat normalverteilter Variablen]{style="color:#267326; font-size:1.5em;"}
+
+
+## Förderungsumfang & -erfolg
+```{r}
+#| label: ausgleichsgerade r = .4
+#| fig-width: 4.5
+#| fig-height: 4.5
+#| out-width: 50%
+#| fig-align: center
+#| cache: true
+
+set.seed(234563457)
+uv <- round(distribution_normal(50, 150, 50), 0)
+av <- rnorm_pre(uv, 60, 20, .4)
+
+ggplot(
+  tibble(`Förderungsdauer [h]` = uv,
+         `Zuwachs in Lesetest [Punkte]` = av),
+  aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`)
+) +
+  geom_point(color = "#8cd000") +
+  geom_rug(color = "#8cd000",
+           alpha = .4) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000") +
+  theme_modern_rc() +
+  labs(
+    title = "Assoziation", 
+    subtitle = "von Förderungsdauer & -erfolg")
+```
+
+
+## Förderungsumfang & -erfolg
+```{r}
+#| label: ausgleichsgerade r = .2
+#| fig-width: 4.5
+#| fig-height: 4.5
+#| out-width: 50%
+#| fig-align: center
+#| cache: true
+
+set.seed(234563457)
+uv <- round(distribution_normal(50, 150, 50), 0)
+av <- rnorm_pre(uv, 60, 20, .2)
+
+ggplot(
+  tibble(`Förderungsdauer [h]` = uv,
+         `Zuwachs in Lesetest [Punkte]` = av),
+  aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`)
+) +
+  geom_point(color = "#8cd000") +
+  geom_rug(color = "#8cd000",
+           alpha = .4) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000") +
+  theme_modern_rc() +
+  labs(
+    title = "Assoziation", 
+    subtitle = "von Förderungsdauer & -erfolg")
+```
+
+## Förderungsumfang & -erfolg {auto-animate="true"}
+```{r}
+#| fig-width: 4.5
+#| fig-height: 4.5
+#| out-width: 50%
+#| fig-align: center
+#| cache: true
+
+set.seed(8)
+uv <- round(distribution_normal(50, 150, 50), 0)
+av <- rnorm_pre(uv, 60, 20, .7)
+
+ggplot(
+  tibble(`Förderungsdauer [h]` = uv,
+         `Zuwachs in Lesetest [Punkte]` = av),
+  aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`)
+) +
+  geom_point(color = "#8cd000") +
+  geom_rug(color = "#8cd000",
+           alpha = .4) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000") +
+  theme_modern_rc() +
+  labs(
+    title = "Assoziation", 
+    subtitle = "von Förderungsdauer & -erfolg")
+
+ggsave("img/r7.svg", width = 5, height = 5)
+ggsave("img/r7wide.svg", width = 7, height = 5)
+```
+
+
+## Gleiche Daten - untersch. Steigung?
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| label: ausgleichsgerade r = .7 breit
+#| fig-width: 6.5
+#| fig-height: 4.5
+#| out-width: 100%
+#| fig-align: center
+#| cache: true
+set.seed(8)
+uv <- round(distribution_normal(50, 150, 50), 0)
+av <- rnorm_pre(uv, 60, 20, .5)
+
+plot <- 
+  ggplot(
+  tibble(`Förderungsdauer [h]` = uv,
+         `Zuwachs in Lesetest [Punkte]` = av),
+  aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`)
+) +
+  geom_point(color = "#8cd000") +
+  geom_rug(color = "#8cd000",
+           alpha = .4) +
+  theme_modern_rc() +
+  labs(
+    title = "Assoziation", 
+    subtitle = "von Förderungsdauer & -erfolg") +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+plot
+```
+
+:::
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 3.5
+#| fig-height: 4.5
+#| out-width: 52%
+#| fig-align: center
+plot
+```
+
+:::
+
+::::
+
+
+## Stand. Steig. der Ausgleichsgerade {.smaller}
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 6.5
+#| fig-height: 4.5
+#| out-width: 100%
+#| fig-align: center
+#| cache: true
+
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+  annotate("text", x = mean(uv), 
+           y = min(av) - 2, 
+           label = "MW ± 1*SD",
+           color = "#d77d00",
+           size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+  annotate("text", x = min(uv) + .75, 
+           y = mean(av), 
+           label = "MW ± 1*SD",
+           color = "#d77d00",
+           size = 2.5,
+           angle = -90) +
+ 
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 3.5
+#| fig-height: 4.5
+#| out-width: 52%
+#| fig-align: center
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+  annotate("text", x = mean(uv), 
+           y = min(av) - 2, 
+           label = "MW ± 1*SD",
+           color = "#d77d00",
+           size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+  annotate("text", x = min(uv) + 6, 
+           y = mean(av), 
+           label = "MW ± 1*SD",
+           color = "#d77d00",
+           size = 2.5,
+           angle = -90) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::::
+
+## Stand. Steig. der Ausgleichsgerade {.smaller}
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 6.5
+#| fig-height: 4.5
+#| out-width: 100%
+#| fig-align: center
+#| cache: true
+
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+#  annotate("text", x = mean(uv), 
+#           y = min(av) -.5, 
+#           label = "MW ± 1*SD",
+#           color = "#d77d00",
+#           size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+ # annotate("text", x = min(uv), 
+ #          y = mean(av), 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 2.5,
+ #          angle = -90) +
+  # Steigungsdreieck
+  geom_segment(aes(y = mean(av), 
+                   yend = mean(av),
+                   x = mean(uv),
+                   xend = mean(uv) + sd(uv)),
+               color = "#d77d00") +
+  geom_segment(aes(y = mean(av), 
+                 yend = mean(av) + cor(av, uv)*sd(av),
+                 x = mean(uv) + sd(uv),
+                 xend = mean(uv) + sd(uv)),
+             color = "#d77d00") +
+  # Hilfslinien
+  geom_segment(aes(x = mean(uv),
+                   xend = mean(uv)),
+                   y = min(av) - 6, 
+                   yend = mean(av),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  geom_segment(aes(x = mean(uv) + sd(uv),
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6, 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+    geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv),
+                   y = mean(av), 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+     geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv) + sd(uv),
+                   y = mean(av) + cor(av, uv)*sd(av), 
+                   yend = mean(av) + cor(av, uv)*sd(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 3.5
+#| fig-height: 4.5
+#| out-width: 52%
+#| fig-align: center
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+ # annotate("text", x = mean(uv), 
+ #          y = min(av) -.5, 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+ # annotate("text", x = min(uv), 
+ #          y = mean(av), 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 2.5,
+ #          angle = -90) +
+  # Steigungsdreieck
+  geom_segment(aes(y = mean(av), 
+                   yend = mean(av),
+                   x = mean(uv),
+                   xend = mean(uv) + sd(uv)),
+               color = "#d77d00") +
+  geom_segment(aes(y = mean(av), 
+                 yend = mean(av) + cor(av, uv)*sd(av),
+                 x = mean(uv) + sd(uv),
+                 xend = mean(uv) + sd(uv)),
+             color = "#d77d00") +
+  # Hilfslinien
+  geom_segment(aes(x = mean(uv),
+                   xend = mean(uv)),
+                   y = min(av) - 6, 
+                   yend = mean(av),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  geom_segment(aes(x = mean(uv) + sd(uv),
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6, 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+    geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv),
+                   y = mean(av), 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+     geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv) + sd(uv),
+                   y = mean(av) + cor(av, uv)*sd(av), 
+                   yend = mean(av) + cor(av, uv)*sd(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::::
+
+## Stand. Steig. der Ausgleichsgerade {.smaller}
+:::: {.columns}
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 6.5
+#| fig-height: 4.5
+#| out-width: 100%
+#| fig-align: center
+#| cache: true
+
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+#  annotate("text", x = mean(uv), 
+#           y = min(av) -.5, 
+#           label = "MW ± 1*SD",
+#           color = "#d77d00",
+#           size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+ # annotate("text", x = min(uv), 
+ #          y = mean(av), 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 2.5,
+ #          angle = -90) +
+  # Steigungsdreieck
+  geom_segment(aes(y = mean(av), 
+                   yend = mean(av),
+                   x = mean(uv),
+                   xend = mean(uv) + sd(uv)),
+               color = "#d77d00") +
+  geom_segment(aes(y = mean(av), 
+                 yend = mean(av) + cor(av, uv)*sd(av),
+                 x = mean(uv) + sd(uv),
+                 xend = mean(uv) + sd(uv)),
+             color = "#d77d00") +
+  # Hilfslinien
+  geom_segment(aes(x = mean(uv),
+                   xend = mean(uv)),
+                   y = min(av) - 6, 
+                   yend = mean(av),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  geom_segment(aes(x = mean(uv) + sd(uv),
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6, 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+    geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv),
+                   y = mean(av), 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+     geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv) + sd(uv),
+                   y = mean(av) + cor(av, uv)*sd(av), 
+                   yend = mean(av) + cor(av, uv)*sd(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::: {.column width='50%'}
+```{r}
+#| fig-width: 3.5
+#| fig-height: 4.5
+#| out-width: 52%
+#| fig-align: center
+plot +
+  # Errorbarmargin UV
+  geom_segment(aes(x = mean(uv) - sd(uv), 
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6,
+                   yend = min(av) - 6),
+               color = "#d77d00") + 
+  geom_point(data =tibble(`Förderungsdauer [h]` = mean(uv),
+                          `Zuwachs in Lesetest [Punkte]` = min(av) - 6),
+             aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+             color = "#d77d00") +
+ # annotate("text", x = mean(uv), 
+ #          y = min(av) -.5, 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 3) +
+  # Errorbarmargin aV
+  geom_segment(aes(y = mean(av) - sd(av), 
+                   yend = mean(av) + sd(av),
+                   x = min(uv) - 4,
+                   xend = min(uv) - 4),
+               color = "#d77d00") +
+  geom_point(data = tibble(`Förderungsdauer [h]` = min(uv) - 4,
+                           `Zuwachs in Lesetest [Punkte]` = mean(av)),
+           aes(`Förderungsdauer [h]`, `Zuwachs in Lesetest [Punkte]`),
+           color = "#d77d00") +
+ # annotate("text", x = min(uv), 
+ #          y = mean(av), 
+ #          label = "MW ± 1*SD",
+ #          color = "#d77d00",
+ #          size = 2.5,
+ #          angle = -90) +
+  # Steigungsdreieck
+  geom_segment(aes(y = mean(av), 
+                   yend = mean(av),
+                   x = mean(uv),
+                   xend = mean(uv) + sd(uv)),
+               color = "#d77d00") +
+  geom_segment(aes(y = mean(av), 
+                 yend = mean(av) + cor(av, uv)*sd(av),
+                 x = mean(uv) + sd(uv),
+                 xend = mean(uv) + sd(uv)),
+             color = "#d77d00") +
+  # Hilfslinien
+  geom_segment(aes(x = mean(uv),
+                   xend = mean(uv)),
+                   y = min(av) - 6, 
+                   yend = mean(av),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  geom_segment(aes(x = mean(uv) + sd(uv),
+                   xend = mean(uv) + sd(uv),
+                   y = min(av) - 6, 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+    geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv),
+                   y = mean(av), 
+                   yend = mean(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+     geom_segment(aes(x = min(uv) - 3,
+                   xend = mean(uv) + sd(uv),
+                   y = mean(av) + cor(av, uv)*sd(av), 
+                   yend = mean(av) + cor(av, uv)*sd(av)),
+               color = "#d77d00",
+               alpha = .1,
+               linetype = 3) +
+  stat_smooth(method = "lm", 
+              se = F, 
+              color = "#8cd000")
+```
+
+:::
+
+::::
+
+> Misst man die Steigung einer »Ausgleichsgerade« in Standardabweichungen, erhält man den Pearson Korrelationskoeffizienten r
+
+
+
+## Aufgaben {.center}
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/Korr_Bildungsabschluesse_erkennen.html" title="Aufgabe"></iframe>
+</center>
+
+
+## Eigenschaften Pearson's $r$  {.center}
+::: {.incremental}
+* Pearson's $r$  beschreibt die Stärke der (negativen oder positiven) Assoziation zweier bivariat normalverteilten Variablen
+* Pearson's $r$  nimmt Werte zwischen -1 und 1 an $(-1 \leq r \leq 1)$. -1 impliziert die maximale negative Assoziation, 0 keine Assoziation und 1 die maximale positive Assoziation
+* Nach Cohen [-@cohen1988], gilt $r =.1$ (bzw. $r = -.1$) als kleiner Effekt, $r =.3$ (bzw. $r = -.3$) als moderater und $r =.5$ (bzw. $r = -.5$) als starker Effekt
+:::
+
+
+## Aufgaben {.center}
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/Korrelationen_deskriptiv_lesen.html" title="Aufgabe"></iframe>
+</center>
+
+## Aufgaben {.center}
+<center>
+<iframe width="1280" height="500" src="Integrierte Aufgaben/Visual_Guessing_r_SC.html" title="Aufgabe"></iframe>
+</center>
+
+## Benchmarks Übersicht {.center}
+
+| **Effektstärke** | **klein** | **moderat** | **groß** |
+| :--- | ---: | ---: | ---: |
+| $\text{U}_1$ | 0.14 | 0.33 | 0.47 |
+| Cohen's $d$ | 0.2 | 0.5 | 0.8 |
+| Cliff's $d$ | 0.11 | 0.28 | 0.43 |
+| $\tau_b$ | .1 | .3 | .5 |
+| $r$ | .1 | .3 | .5 |
+
+
+## Literatur
+<style>
+div.callout {border-left-color: #267326 !important;
+</style>
