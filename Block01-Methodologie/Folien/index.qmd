@@ -1,12 +1,13 @@
 ---
 title: "VL Forschungsmethoden"
-subtitle: "Grundbegriffe quantitativ-empirischer Methodologie"
-author: "Samuel Merk & Cora Parrisius"
+subtitle: "Einführung in qualitative und quantitative Forschungsmethoden"
+author: "Cora Parrisius"
 
 date: today
 date-format: "[Sommersemster] YYYY"
 
 logo: img/ph-logo.svg
+footer: Folien adaptiert von Samuel Merk | ogy.de/mvl-wise-2526
 
 
 format: 
