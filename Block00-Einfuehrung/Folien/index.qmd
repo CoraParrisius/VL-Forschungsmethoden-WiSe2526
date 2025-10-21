@@ -4,7 +4,7 @@ subtitle: "Einführung in qualitative und quantitative Forschungsmethoden"
 author: "Cora Parrisius"
 
 date: today
-date-format: "[Wintersemester] YYYY"
+date-format: "[Wintersemester] 2025/26"
 
 logo: img/ph-logo.svg
 footer: Folien adaptiert von Samuel Merk | ogy.de/mvl-wise-2526
